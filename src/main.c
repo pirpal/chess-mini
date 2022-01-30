@@ -11,9 +11,13 @@ int main(void)
   printf("\n\t|    Mini Chess Engine    |");
   printf("\n\t+-------------------------+\n\n");
 
-  printf("\n\n\tKnight a4 raw moves:\n");
-  U64 bb = knight_raw_moves(h4);
-  print_bitboard(bb);
+  printf("\n\tBlack bishops:\n");
+  print_bitboard(B_BISHOPS);
+
+  printf("\n\tTrying rec function:\n");
+  U64 cross_f3 = raw_diagonal_cross(e6);
+  printf("\n\tRaw cross from f3:\n");
+  print_bitboard(cross_f3);
 
   printf("\n\n");
   return EXIT_SUCCESS;

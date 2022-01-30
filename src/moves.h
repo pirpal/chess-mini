@@ -27,9 +27,15 @@ bool in_ranks_7_8(int square);
 bool in_files_A_B(int square);
 bool in_files_G_H(int square);
 
+int square_to_rank(int square);
+int square_to_file(int square);
+
 U64 pawn_raw_moves(int square, int color);
 U64 knight_raw_moves(int square);
 U64 king_raw_moves(int square);
+
+U64 raw_diagonal_cross(int square);
+
 U64 diagonal_nw_from(int square);
 U64 diagonal_ne_from(int square);
 U64 diagonal_sw_from(int square);
