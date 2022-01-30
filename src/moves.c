@@ -2,6 +2,7 @@
 #include "moves.h"
 #include "bitboards.h"
 
+
 bool in_A_file(int square)
 {
   U64 bb = 0ULL;
@@ -143,6 +144,7 @@ bool in_files_G_H(int square)
   return (bb & GH_FILES) ? true : false;
 }
 
+
 U64 pawn_raw_moves(int square, int color)
 {
   // return 0 if pawn in rank 1 or 8
@@ -197,7 +199,71 @@ U64 knight_raw_moves(int square)
     moves |= (bb >> 6); // En
   if (!in_rank_1(square) && !in_files_G_H(square)) // OK
     moves |= (bb << 10); // Es
+  return moves;
+}
 
+int square_to_rank(int square)
+{
+  int r = square / 8;
+  return r; 
+}
+
+int square_to_file(int square)
+{
+  int f = square - (square / 8);
+  return f;
+}
+
+static U64 diagonal_nw_rec(U64 bb, int square)
+{
+  if (in_A_file(square) || (in_rank_8(square)) || square < 0) {
+    return bb;
+  }
+  square -= 9;
+  bb |= (bb >> 9);
+  return diagonal_nw_rec(bb, square);
+}
+
+static U64 diagonal_ne_rec(U64 bb, int square)
+{
+  if (in_H_file(square) || (in_rank_8(square)) || square < 0) {
+    return bb;
+  }
+  square -= 7;
+  bb |= (bb >> 7);
+  return diagonal_ne_rec(bb, square);
+}
+
+static U64 diagonal_sw_rec(U64 bb, int square)
+{
+  if (in_A_file(square) || (in_rank_1(square)) || square > 63) {
+    return bb;
+  }
+  square += 7;
+  bb |= (bb << 7);
+  return diagonal_sw_rec(bb, square);
+}
+
+static U64 diagonal_se_rec(U64 bb, int square)
+{
+  if (in_H_file(square) || (in_rank_1(square)) || square > 63) {
+    return bb;
+  }
+  square += 9;
+  bb |= (bb << 9);
+  return diagonal_se_rec(bb, square);
+}
+
+U64 raw_diagonal_cross(int square)
+{
+  U64 piece_bb = 0ULL;
+  set_bit(piece_bb, square);
+  U64 nw = diagonal_nw_rec(piece_bb, square);
+  U64 ne = diagonal_ne_rec(piece_bb, square);
+  U64 sw = diagonal_sw_rec(piece_bb, square);
+  U64 se = diagonal_se_rec(piece_bb, square);
+  U64 moves = nw | ne | sw | se;
+  pop_bit(moves, square); // remove piece bit
   return moves;
 }
 
