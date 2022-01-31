@@ -1,5 +1,7 @@
 #include <criterion/criterion.h>
-#include "../src/bitboards.h"
+#include "../src/type_alias.h"
+#include "../src/chess_helpers.h"
+#include "../src/bit_operations.h"
 #include "../src/moves.h"
 
 // CORNERS

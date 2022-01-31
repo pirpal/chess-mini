@@ -1,50 +1,33 @@
 #ifndef BITBOARDS_H
 #define BITBOARDS_H
 
-#include <stdbool.h>
 
-#define U64 unsigned long long
-
-#define get_bit(bb, sq) (bb & (1ULL << sq))
-
-#define set_bit(bb, sq) (bb |= (1ULL << sq))
-
-#define pop_bit(bb, sq) (get_bit(bb, sq) ? bb ^= (1ULL << sq) : 0)
-
-#define square_from(r, f) (r * 8 + f)
-
-typedef enum Color {WHITE, BLACK} Color;
-
-typedef enum Piece
-{
-  empty, 
-  wp, wN, wB, wR, wQ, wK, 
-  bp, bN, bB, bR, bQ, bK
-} Piece;
-
-// These are for console printing functions:
-#define PIECES ".pnbrqkPNBRQK"
-
-#define EMPTY_SQUARE '.'
-#define BIT_CHAR '@'
-
-#define FILES "abcdefgh"
-
-#define RANKS "87654321"
-
-
-/*  LSB (Least Significant Bit), 2^0, is in "a8"
- *  in standard "white bottom" display.
- *  MSB (Most Significant Bit) ,2^63, is in "h1".
+/*  01010101011010101010100110011100101101010
+ *  0                                       1
+ *  1               BITBOARDS               0
+ *  0                                       1
+ *  10100110011000111001010100111000110011011
+ *
+ *
+ * WARNING :
+ * These file should absolutely NOT be modified,
+ * as it represents:
+ *   - standard chess starting position for all pieces
+ *   - chessboard ranks and files
+ *
+ * Design choice:
+ * LSB (Least Significant Bit), 2^0, is in "a8"
+ * in standard display (white at the bottom of the board).
+ * MSB (Most Significant Bit), 2^63, is in "h1".
  *  
- *    0  1  2  3  4  5  6  7
- *    8  9 10 11 12 13 14 15
- *   16 17 18 19 20 21 22 23
- *   24 25 26 27 28 29 30 31
- *   32 33 34 35 36 37 38 39
- *   40 41 42 43 44 45 46 47
- *   48 49 50 51 52 53 54 55
- *   56 57 58 59 60 61 62 63
+ *   0  1  2  3  4  5  6  7
+ *   8  9 10 11 12 13 14 15
+ *  16 17 18 19 20 21 22 23
+ *  24 25 26 27 28 29 30 31
+ *  32 33 34 35 36 37 38 39
+ *  40 41 42 43 44 45 46 47
+ *  48 49 50 51 52 53 54 55
+ *  56 57 58 59 60 61 62 63
 */
 
 #define W_PAWNS 71776119061217280ULL
@@ -85,56 +68,6 @@ typedef enum Piece
 #define RANKS_12 18446462598732840960ULL
 #define RANKS_78 65535ULL
 
-typedef enum Square
-{
-  a8, b8, c8, d8, e8, f8, g8, h8,
-  a7, b7, c7, d7, e7, f7, g7, h7,
-  a6, b6, c6, d6, e6, f6, g6, h6,
-  a5, b5, c5, d5, e5, f5, g5, h5,
-  a4, b4, c4, d4, e4, f4, g4, h4,
-  a3, b3, c3, d3, e3, f3, g3, h3,
-  a2, b2, c2, d2, e2, f2, g2, h2,
-  a1, b1, c1, d1, e1, f1, g1, h1
-} Square;
-
-
-/* GameState
- * This structure is created/updated after each move.
- * Its purpose is to store:
- * - all current bitboards
- * - castling availability
- * - en passant square
- * - half moves clock (nb of half moves since last capture or 
- *   last pawn move)
- * - fullmove number
- * */
-typedef struct GameState
-{
-  // bitboards:
-  U64 w_pawns, w_rooks, w_knights, w_bishops, w_queens, w_king;
-  U64 b_pawns, b_rooks, b_knights, b_bishops, b_queens, b_king;
-  // En passant square ; by default en passant is always set and
-  // recorded in game state when a pawn make a two squares first
-  // move, regardless of whether or there is an opponent pawn to 
-  // take en passant.
-  Square en_passant; // Square | NULL
-  // Active color to play in this position:
-  Color color_to_play;
-  bool w_castle_kingside;
-  bool w_castle_queenside;
-  bool b_castle_kingside;
-  bool b_castle_queenside;
-  unsigned int half_moves;
-  unsigned int full_moves;
-
-} GameState;
-
-int count_bits(U64 bb);
-void print_files(void);
-void print_bitboard(U64 bb);
-U64 populate_bitboard(int *squares);
-U64 white_occupancy(GameState *fbb);
-U64 black_occupancy(GameState *fbb);
-
 
 #endif // BITBOARDS_H
+

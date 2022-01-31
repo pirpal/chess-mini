@@ -1,5 +1,5 @@
 #include <criterion/criterion.h>
-#include "../src/bitboards.h"
+#include "../src/bit_operations.h"
 #include "../src/move_parsing.h"
 
 
