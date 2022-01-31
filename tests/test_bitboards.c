@@ -1,5 +1,6 @@
 #include <criterion/criterion.h>
 #include "../src/bitboards.h"
+#include "../src/bit_operations.h"
 
 Test(bitboards_tests, pawns_nb)
 {

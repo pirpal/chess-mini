@@ -1,6 +1,6 @@
 #include <criterion/criterion.h>
-#include "../src/moves.h"
-#include "../src/bitboards.h"
+#include "../src/chess_helpers.h"
+#include "../src/ranks_files.h"
 
 Test(test_ranks_files, ranks)
 {

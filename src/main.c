@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "bitboards.h"
+#include "bit_operations.h"
 #include "moves.h"
 #include "move_parsing.h"
 

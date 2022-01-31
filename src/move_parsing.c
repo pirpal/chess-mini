@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "chess_helpers.h"
 #include "move_parsing.h"
 
 
@@ -7,7 +8,7 @@ bool pawn_move(char *move)
 {
   bool pawn = false;
   for (int i = 0; i < 8; i++) {
-    if (FILES[i] == move[0])
+    if (FILES_STR[i] == move[0])
       return true;
   }
   return pawn;
