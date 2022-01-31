@@ -1,4 +1,3 @@
-
 #include "moves.h"
 #include "bitboards.h"
 
@@ -263,6 +262,59 @@ U64 raw_diagonal_cross(int square)
   U64 sw = diagonal_sw_rec(piece_bb, square);
   U64 se = diagonal_se_rec(piece_bb, square);
   U64 moves = nw | ne | sw | se;
+  pop_bit(moves, square); // remove piece bit
+  return moves;
+}
+
+static U64 straight_north_rec(U64 bb, int square)
+{
+  if (in_rank_8(square) || square < 0) {
+    return bb;
+  }
+  square -= 8;
+  bb |= (bb >> 8);
+  return straight_north_rec(bb, square);
+}
+
+static U64 straight_south_rec(U64 bb, int square)
+{
+  if (in_rank_1(square) || square > 63) {
+    return bb;
+  }
+  square += 8;
+  bb |= (bb << 8);
+  return straight_south_rec(bb, square);
+}
+
+static U64 straight_west_rec(U64 bb, int square)
+{
+  if (in_A_file(square) || square < 0) {
+    return bb;
+  }
+  square -= 1;
+  bb |= (bb >> 1);
+  return straight_west_rec(bb, square);
+}
+
+static U64 straight_east_rec(U64 bb, int square)
+{
+  if (in_H_file(square) || square > 63) {
+    return bb;
+  }
+  square += 1;
+  bb |= (bb << 1);
+  return straight_east_rec(bb, square);
+}
+
+U64 raw_straight_cross(int square)
+{
+  U64 bb = 0ULL;
+  set_bit(bb, square);
+  U64 n = straight_north_rec(bb, square);
+  U64 s = straight_south_rec(bb, square);
+  U64 w = straight_west_rec(bb, square);
+  U64 e = straight_east_rec(bb, square);
+  U64 moves = n | w | s | e;
   pop_bit(moves, square); // remove piece bit
   return moves;
 }
