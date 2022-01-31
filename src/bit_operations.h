@@ -28,9 +28,9 @@ int count_bits(U64 bb);
 
 U64 populate_bitboard(int *squares);
 
-U64 white_occupancy(GameState *fbb);
+U64 white_occupancy(GameState *gs);
 
-U64 black_occupancy(GameState *fbb);
+U64 black_occupancy(GameState *gs);
 
 
 #endif // BIT_OPERATIONS_H
