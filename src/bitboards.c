@@ -1,6 +1,20 @@
 #include <stdio.h>
 #include "bitboards.h"
 
+int count_bits(U64 bb)
+{
+  int count = 0;
+  for (int rank = 0; rank < 8; rank ++) {
+    for (int file = 0; file < 8; file++) {
+      int square = square_from(rank, file);
+      if (get_bit(bb, square)) {
+        count += 1;
+      }
+    }
+  }
+  return count;
+}
+
 void print_files(void)
 {
   printf("\t  ");
@@ -35,25 +49,38 @@ void print_bitboard(U64 bb)
   printf("\n\n\tbb: %llu\n", bb);
 }
 
-U64 white_occupancy(FullBitboard *fbb)
+U64 populate_bitboard(int *squares)
 {
-  U64 wo = fbb->w_pawns;
-  wo &= fbb->w_rooks;
-  wo &= fbb->w_knights;
-  wo &= fbb->w_bishops;
-  wo &= fbb->w_queens;
-  wo &= fbb->w_king;
-  return (wo);
+  // FIXME only first square is set when it's dont
+  // with this function. Tested outside of the function,
+  // the for loops behaves correctly.
+  U64 bb = 0ULL;
+  for (unsigned int i = 0; i < (sizeof(squares) / sizeof(int)); i++)
+  {
+    bb |= (1ULL << squares[i]);
+  }
+  return bb;
 }
 
-U64 black_occupancy(FullBitboard *fbb)
+U64 white_occupancy(GameState *game_state)
 {
-  U64 bo = fbb->b_pawns;
-  bo &= fbb->b_rooks;
-  bo &= fbb->b_knights;
-  bo &= fbb->b_bishops;
-  bo &= fbb->b_queens;
-  bo &= fbb->b_king;
-  return (bo);
+  U64 occupancy = game_state->w_pawns;
+  occupancy |= game_state->w_rooks;
+  occupancy |= game_state->w_knights;
+  occupancy |= game_state->w_bishops;
+  occupancy |= game_state->w_queens;
+  occupancy |= game_state->w_king;
+  return (occupancy);
+}
+
+U64 black_occupancy(GameState *game_state)
+{
+  U64 occupancy = game_state->b_pawns;
+  occupancy |= game_state->b_rooks;
+  occupancy |= game_state->b_knights;
+  occupancy |= game_state->b_bishops;
+  occupancy |= game_state->b_queens;
+  occupancy |= game_state->b_king;
+  return (occupancy);
 }
 
