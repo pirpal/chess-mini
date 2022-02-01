@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include "bit_operations.h"
 
 int count_bits(U64 bb)
@@ -14,16 +15,17 @@ int count_bits(U64 bb)
   return count;
 }
 
-U64 populate_bitboard(int *squares)
+U64 fill_bb_with(int squares_nb, ...)
 {
-  // FIXME only first square is set when it's dont
-  // with this function. Tested outside of the function,
-  // the for loops behaves correctly.
   U64 bb = 0ULL;
-  for (unsigned int i = 0; i < (sizeof(squares) / sizeof(int)); i++)
-  {
-    bb |= (1ULL << squares[i]);
+  va_list squares_list;
+  int square;
+  va_start(squares_list, squares_nb);
+  for (int i = 0; i < squares_nb; i++) {
+    square = va_arg(squares_list, int);
+    bb |= (1ULL << square);
   }
+  va_end(squares_list);
   return bb;
 }
 
