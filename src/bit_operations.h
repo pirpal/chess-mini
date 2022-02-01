@@ -26,7 +26,7 @@
 
 int count_bits(U64 bb);
 
-U64 populate_bitboard(int *squares);
+U64 fill_bb_with(int squares_nb, ...);
 
 U64 white_occupancy(GameState *gs);
 
